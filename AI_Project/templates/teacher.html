@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Teacher Panel</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Upload Model Answer</h2>
+
+<form action="/upload_model" method="post" enctype="multipart/form-data">
+
+<input type="text" name="question" placeholder="Enter Question" required>
+
+<br><br>
+
+<input type="file" name="file" required>
+
+<br><br>
+
+<button type="submit">Upload</button>
+
+</form>
+
+<hr>
+
+<h2>Evaluate Student Answer</h2>
+
+<form action="/evaluate" method="post" enctype="multipart/form-data">
+
+<input type="text" name="question" placeholder="Enter Question" required>
+
+<br><br>
+
+<input type="file" name="file" required>
+
+<br><br>
+
+<button type="submit">Evaluate</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
