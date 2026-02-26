@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Result</title>
-<link rel="stylesheet" href="/static/style.css">
+    <title>Evaluation Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<h2>Evaluation Result</h2>
+<div class="result-card">
+    <h2>📊 Evaluation Result</h2>
 
-<pre>{{result}}</pre>
+    <div class="grade-box" style="background-color: {{ color }}">
+        Grade: {{ grade }}
+    </div>
 
-<a href="/">Home</a>
+    <p><strong>Score:</strong> {{ score }}</p>
+    <p><strong>Percentage:</strong> {{ percentage }}%</p>
+
+    <a href="/"><button>Back to Home</button></a>
+</div>
 
 </body>
 </html>

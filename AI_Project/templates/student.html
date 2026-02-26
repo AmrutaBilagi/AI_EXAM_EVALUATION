@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Student</title>
-<link rel="stylesheet" href="/static/style.css">
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<h2>Upload Answer Sheet</h2>
+<div class="card">
+    <h2>🎓 Student Answer Submission</h2>
 
-<form method="post" enctype="multipart/form-data">
-<input type="file" name="paper" required>
-<button type="submit">Submit</button>
-</form>
+    <form method="POST" action="/student_login" enctype="multipart/form-data">
 
-<a href="/">Home</a>
+        <label>Student Name</label>
+        <input type="text" name="student_name" placeholder="Enter your name" required>
+
+        <label>USN / Roll Number</label>
+        <input type="text" name="usn" placeholder="Enter your USN" required>
+
+        <label>Upload Answer Sheet (PDF)</label>
+        <input type="file" name="student_file" accept=".pdf" required>
+
+        <button type="submit">Submit Answer</button>
+
+    </form>
+</div>
 
 </body>
 </html>
