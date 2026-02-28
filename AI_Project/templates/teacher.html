@@ -12,21 +12,18 @@
     <form method="POST" action="/teacher_login" enctype="multipart/form-data">
 
         <label>Teacher Name</label>
-        <input type="text" name="teacher_name" placeholder="Enter your name" required>
+        <input type="text" name="teacher_name" required>
 
         <label>Teacher ID</label>
-        <input type="text" name="teacher_id" placeholder="Enter your ID" required>
+        <input type="text" name="teacher_id" required>
 
         <label>Password</label>
-        <input type="password" name="password" placeholder="Enter password" required>
-
-        <label>Total Marks</label>
-        <input type="number" name="total_marks" placeholder="Enter total marks" required>
+        <input type="password" name="password" required>
 
         <label>Upload Model Answer Sheet (PDF)</label>
         <input type="file" name="model_file" accept=".pdf" required>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Upload</button>
 
     </form>
 </div>

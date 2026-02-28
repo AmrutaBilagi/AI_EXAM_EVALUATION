@@ -4,6 +4,7 @@ from PyPDF2 import PdfReader
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from werkzeug.utils import secure_filename
+import re
 
 # ---------------------------------
 # Create Flask App (VERY IMPORTANT)
@@ -48,17 +49,45 @@ def extract_text_from_pdf(filepath):
 # ---------------------------------
 # Evaluate Answer
 # ---------------------------------
-def evaluate_answer(student_text, model_text, total_marks):
 
-    vectorizer = TfidfVectorizer()
-    tfidf_matrix = vectorizer.fit_transform([student_text, model_text])
-    similarity = cosine_similarity(
-        tfidf_matrix[0:1],
-        tfidf_matrix[1:2]
-    )[0][0]
 
-    score = round(similarity * total_marks, 2)
-    percentage = round(similarity * 100, 2)
+def evaluate_answer(student_text, model_text):
+
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+
+    # Extract model questions with marks
+    model_pattern = r"(Q\d+)\s*\((\d+)\s*Marks\)(.*?)((?=Q\d+\s*\(\d+\s*Marks\))|$)"
+    model_matches = re.findall(model_pattern, model_text, re.DOTALL)
+
+    total_score = 0
+    total_marks = 0
+    results = []
+
+    for question, marks, model_answer, _ in model_matches:
+
+        marks = float(marks)
+        total_marks += marks
+
+        # Extract corresponding student answer
+        student_pattern = rf"{question}(.*?)((?=Q\d+)|$)"
+        student_match = re.search(student_pattern, student_text, re.DOTALL)
+
+        if student_match:
+            student_answer = student_match.group(1)
+
+            vectorizer = TfidfVectorizer()
+            tfidf = vectorizer.fit_transform([student_answer, model_answer])
+            similarity = cosine_similarity(tfidf[0:1], tfidf[1:2])[0][0]
+
+            score = round(similarity * marks, 2)
+        else:
+            score = 0
+
+        total_score += score
+        results.append((question, score, marks))
+
+    percentage = round((total_score / total_marks) * 100, 2)
 
     if percentage >= 75:
         grade = "A"
@@ -73,7 +102,7 @@ def evaluate_answer(student_text, model_text, total_marks):
         grade = "Fail"
         color = "red"
 
-    return score, percentage, grade, color
+    return total_score, percentage, grade, color, results
 
 
 # ---------------------------------
@@ -93,17 +122,10 @@ def teacher_login():
         teacher_name = request.form.get("teacher_name")
         teacher_id = request.form.get("teacher_id")
         password = request.form.get("password")
-        total_marks = request.form.get("total_marks")
         file = request.files.get("model_file")
 
-        # Simple password check
         if password != "admin123":
             return "Invalid Password"
-
-        try:
-            total_marks = float(total_marks)
-        except:
-            return "Enter valid total marks"
 
         if not file or file.filename == "":
             return "Upload Model Answer PDF"
@@ -119,15 +141,11 @@ def teacher_login():
         if model_text.strip() == "":
             return "Invalid PDF"
 
-        # Save model answer text
+        # Save extracted text
         with open("model_answer.txt", "w", encoding="utf-8") as f:
             f.write(model_text)
 
-        # Save total marks
-        with open("total_marks.txt", "w") as f:
-            f.write(str(total_marks))
-
-        return f"Model Answer Saved Successfully ✅ <br> Welcome {teacher_name}"
+        return f"Model Answer Uploaded Successfully ✅ Welcome {teacher_name}"
 
     return render_template("teacher.html")
 
@@ -144,7 +162,7 @@ def student_login():
         if not allowed_file(file.filename):
             return "Only PDF allowed"
 
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], secure_filename(file.filename))
         file.save(filepath)
 
         student_text = extract_text_from_pdf(filepath)
@@ -159,17 +177,10 @@ def student_login():
         except:
             return "Teacher has not uploaded model answer"
 
-        # Load total marks
-        try:
-            with open("total_marks.txt", "r") as f:
-                total_marks = float(f.read())
-        except:
-            return "Teacher has not set total marks"
-
-        score, percentage, grade, color = evaluate_answer(
+        # Evaluate
+        score, percentage, grade, color, results = evaluate_answer(
             student_text,
-            model_text,
-            total_marks
+            model_text
         )
 
         return render_template(
@@ -177,7 +188,8 @@ def student_login():
             score=score,
             percentage=percentage,
             grade=grade,
-            color=color
+            color=color,
+            results=results
         )
 
     return render_template("student.html")

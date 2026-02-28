@@ -1,13 +1,8 @@
-Artificial Intelligence and Machine Learning
-Artificial Intelligence (AI) is a branch of computer science that focuses on creating intelligent
-machines
-that can perform tasks that normally require human intelligence. These tasks include learning,
-reasoning,
-problem-solving, decision-making, and language understanding.
-Machine Learning (ML) is a subset of Artificial Intelligence that enables systems to learn from data
-without being explicitly programmed. ML algorithms improve automatically through experience.
-There are three main types of Machine Learning:
-Supervised Learning, Unsupervised Learning, and Reinforcement Learning.
-Applications of AI include healthcare, banking, fraud detection, education, robotics,
-and natural language processing. AI improves efficiency, accuracy, and automation in modern
-systems.
+Q1 (5 Marks)  
+Artificial Intelligence is a branch of computer science that creates intelligent systems.  
+ 
+Q2 (10 Marks)  
+Machine Learning is a subset of AI that allows systems to learn from data without programming.  
+ 
+Q3 (5 Marks)  
+Applications of AI include healthcare, banking, robotics and NLP .  

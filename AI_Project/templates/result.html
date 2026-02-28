@@ -1,22 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Evaluation Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Result</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .result-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th {
+            background: #2a5298;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f6ff;
+        }
+
+        .score-box {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .grade {
+            font-size: 22px;
+            font-weight: bold;
+            color: {{ color }};
+        }
+
+        .btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #1e3c72;
+        }
+
+    </style>
 </head>
 <body>
 
 <div class="result-card">
-    <h2>📊 Evaluation Result</h2>
 
-    <div class="grade-box" style="background-color: {{ color }}">
+    <h2>📊 Question-wise Marks</h2>
+
+    <table>
+        <tr>
+            <th>Question</th>
+            <th>Scored</th>
+            <th>Total</th>
+        </tr>
+
+        {% for q, scored, total in results %}
+        <tr>
+            <td>{{ q }}</td>
+            <td>{{ scored }}</td>
+            <td>{{ total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="score-box">
+        <strong>Total Score:</strong> {{ score }}
+    </div>
+
+    <div class="score-box">
+        <strong>Percentage:</strong> {{ percentage }}%
+    </div>
+
+    <div class="grade">
         Grade: {{ grade }}
     </div>
 
-    <p><strong>Score:</strong> {{ score }}</p>
-    <p><strong>Percentage:</strong> {{ percentage }}%</p>
+    <a href="/" class="btn">🏠 Back to Home</a>
 
-    <a href="/"><button>Back to Home</button></a>
 </div>
 
 </body>
